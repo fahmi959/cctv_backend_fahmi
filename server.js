@@ -1,22 +1,27 @@
-// server.js (Backend: WebSocket signaling)
+const express = require('express');
+const WebSocket = require('ws');
+const app = express();
+const http = require('http');
+const server = http.createServer(app);
 
-const WebSocket = require("ws");
-const wss = new WebSocket.Server({ port: 3000 });
+// Membuat server WebSocket
+const wss = new WebSocket.Server({ server });
 
-wss.on('connection', function connection(ws) {
-    console.log("Client connected");
-
-    ws.on('message', function incoming(message) {
-        console.log('received: %s', message);
-        // Broadcast message to all connected clients (signaling data)
-        wss.clients.forEach(function each(client) {
-            if (client !== ws && client.readyState === WebSocket.OPEN) {
-                client.send(message);
-            }
-        });
+wss.on('connection', ws => {
+    console.log('Client connected');
+    
+    // Mengirimkan pesan ke client
+    ws.on('message', message => {
+        console.log(`Received: ${message}`);
     });
 
-    ws.on('close', () => {
-        console.log("Client disconnected");
-    });
+    // Contoh mengirimkan data ke client
+    ws.send('Hello from server!');
+});
+
+app.use(express.static('public')); // Menggunakan folder public untuk file statis
+
+// Menjalankan server pada port tertentu
+server.listen(3000, () => {
+    console.log('Server is running on http://localhost:3000');
 });
