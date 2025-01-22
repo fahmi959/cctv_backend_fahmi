@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CCTV Monitoring</title>
-  <script src="/socket.io/socket.io.js"></script>
   <style>
     video {
       width: 320px;
@@ -16,33 +15,82 @@
 </head>
 <body>
   <h1>Live CCTV Monitoring</h1>
-  <div id="videoContainer"></div>
+  <video id="remoteVideo" autoplay></video>
 
   <script>
-    const socket = io();
+    const signalingServer = new WebSocket('ws://localhost:3000');
+    const localVideo = document.createElement("video");
+    localVideo.id = "localVideo";
+    localVideo.autoplay = true;
+    document.body.appendChild(localVideo);
 
-    socket.on("receiveStream", ({ id, data }) => {
-      console.log("Received stream data:", data);
+    const peerConnection = new RTCPeerConnection();
+    const constraints = { video: true };
 
-      let videoElement = document.getElementById(id);
-      if (!videoElement) {
-        videoElement = document.createElement("video");
-        videoElement.id = id;
-        videoElement.autoplay = true;
-        videoElement.controls = false;
-        document.getElementById("videoContainer").appendChild(videoElement);
+    // Get user media (camera)
+    navigator.mediaDevices.getUserMedia(constraints)
+      .then((stream) => {
+        localVideo.srcObject = stream;
+
+        // Add tracks from the camera to the peer connection
+        stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
+
+        // Create an offer to send to the backend
+        peerConnection.createOffer()
+          .then(offer => {
+            return peerConnection.setLocalDescription(offer);
+          })
+          .then(() => {
+            signalingServer.send(JSON.stringify({
+              type: "offer",
+              sdp: peerConnection.localDescription
+            }));
+          });
+      })
+      .catch((error) => {
+        console.error("Error accessing media devices.", error);
+      });
+
+    // Handle incoming signaling messages
+    signalingServer.onmessage = (message) => {
+      const data = JSON.parse(message.data);
+
+      if (data.type === "offer") {
+        // Answer to the offer
+        peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp))
+          .then(() => peerConnection.createAnswer())
+          .then((answer) => peerConnection.setLocalDescription(answer))
+          .then(() => {
+            signalingServer.send(JSON.stringify({
+              type: "answer",
+              sdp: peerConnection.localDescription
+            }));
+          });
+      } else if (data.type === "answer") {
+        // Set the answer as remote description
+        peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
+      } else if (data.type === "candidate") {
+        // Add ICE candidates to the connection
+        const candidate = new RTCIceCandidate(data.candidate);
+        peerConnection.addIceCandidate(candidate);
       }
+    };
 
-      try {
-        const byteArray = new Uint8Array(data); // Direct binary data
-        const blob = new Blob([byteArray], { type: 'video/mp4' });
-        const objectURL = URL.createObjectURL(blob);
-
-        videoElement.src = objectURL;
-      } catch (error) {
-        console.error("Error decoding or creating Blob", error);
+    // Add ICE candidates to the peer connection
+    peerConnection.onicecandidate = (event) => {
+      if (event.candidate) {
+        signalingServer.send(JSON.stringify({
+          type: "candidate",
+          candidate: event.candidate
+        }));
       }
-    });
+    };
+
+    // Display the remote video stream
+    peerConnection.ontrack = (event) => {
+      const remoteVideo = document.getElementById('remoteVideo');
+      remoteVideo.srcObject = event.streams[0];
+    };
   </script>
 </body>
 </html>
