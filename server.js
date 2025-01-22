@@ -9,6 +9,8 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Endpoint untuk menerima data stream dari aplikasi Android (RTMP streaming)
+// Anda bisa menggunakan library seperti fluent-ffmpeg untuk memproses stream di backend, namun untuk saat ini
+// kita hanya menyediakan API dasar untuk menerima stream dari frontend
 app.post('/stream', (req, res) => {
     console.log("Stream received");
     res.status(200).send("Stream received");
