@@ -27,3 +27,34 @@ io.on("connection", (socket) => {
 server.listen(3000, () => {
   console.log("Server running on http://localhost:3000");
 });
+
+
+socket.on("receiveStream", ({ id, data }) => {
+  console.log("Received stream from client:", id, data);  // Log data yang diterima
+
+  let videoElement = document.getElementById(id);
+
+  // Jika elemen video belum ada, buat elemen baru
+  if (!videoElement) {
+    videoElement = document.createElement("video");
+    videoElement.id = id;
+    videoElement.autoplay = true;
+    videoElement.controls = false;
+    document.getElementById("videoContainer").appendChild(videoElement);
+  }
+
+  // Ubah Base64 menjadi Blob dan kemudian buat Object URL
+  const byteCharacters = atob(data);  // Decoding Base64 to raw binary
+  const byteArray = new Uint8Array(byteCharacters.length);
+
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteArray[i] = byteCharacters.charCodeAt(i);
+  }
+
+  const blob = new Blob([byteArray], { type: 'video/mp4' });  // Blob for video stream
+  const objectURL = URL.createObjectURL(blob);  // Create URL from Blob
+
+  // Set stream video ke elemen video
+  videoElement.src = objectURL;
+});
+
