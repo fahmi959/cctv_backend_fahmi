@@ -6,6 +6,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
+// Serve static files (you can place your HTML file here)
 app.use(express.static("public"));
 
 io.on("connection", (socket) => {
@@ -13,7 +14,9 @@ io.on("connection", (socket) => {
 
   socket.on("videoStream", (data) => {
     console.log("Received video stream data from client:", data);
-    socket.broadcast.emit("receiveStream", { id: socket.id, data });
+
+    // Broadcast the binary stream data to all connected clients
+    socket.broadcast.emit("receiveStream", { id: socket.id, data: data });
   });
 
   socket.on("disconnect", () => {
