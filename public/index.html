@@ -11,17 +11,17 @@
 </head>
 <body>
     <h1>Live CCTV Stream</h1>
-    <video id="videoElement" width="640" height="480" autoplay></video>
-
-   <script>
+<video id="videoElement" width="640" height="480" autoplay></video>
+<script>
     // URL HLS stream yang dikirim dari server atau aplikasi
     var videoUrl = "https://cctv-backend-fahmi.vercel.app/live/stream.m3u8";  // Ganti dengan URL stream HLS yang sesuai
 
     // Menggunakan HLS.js untuk memutar stream HLS
+    var video = document.getElementById('videoElement');  // Ganti dengan ID yang benar
     if (Hls.isSupported()) {
         var hls = new Hls();
         hls.loadSource(videoUrl);
-        hls.attachMedia(document.getElementById('video'));
+        hls.attachMedia(video);
         hls.on(Hls.Events.MANIFEST_PARSED, function() {
             console.log("Manifest Loaded");
         });
@@ -31,5 +31,6 @@
         video.src = videoUrl;
     }
 </script>
+
 </body>
 </html>
