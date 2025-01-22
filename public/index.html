@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CCTV Monitoring</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <style>
+    video {
+      width: 320px;
+      height: 240px;
+      margin: 10px;
+      border: 2px solid #000;
+    }
+  </style>
+</head>
+<body>
+  <h1>Live CCTV Monitoring</h1>
+  <div id="videoContainer"></div>
+
+  <script>
+    const socket = io();
+
+    // Tambahkan stream video ke halaman
+    socket.on("receiveStream", ({ id, data }) => {
+      let videoElement = document.getElementById(id);
+
+      // Jika elemen video belum ada, buat elemen baru
+      if (!videoElement) {
+        videoElement = document.createElement("video");
+        videoElement.id = id;
+        videoElement.autoplay = true;
+        videoElement.controls = false;
+        document.getElementById("videoContainer").appendChild(videoElement);
+      }
+
+      // Set stream video ke elemen video
+      videoElement.src = data;
+    });
+  </script>
+</body>
+</html>
