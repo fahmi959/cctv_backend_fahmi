@@ -21,11 +21,10 @@
   <script>
     const socket = io();
 
-    // Tambahkan stream video ke halaman
     socket.on("receiveStream", ({ id, data }) => {
-      let videoElement = document.getElementById(id);
+      console.log("Received stream data:", data);
 
-      // Jika elemen video belum ada, buat elemen baru
+      let videoElement = document.getElementById(id);
       if (!videoElement) {
         videoElement = document.createElement("video");
         videoElement.id = id;
@@ -34,19 +33,21 @@
         document.getElementById("videoContainer").appendChild(videoElement);
       }
 
-      // Ubah Base64 menjadi Blob dan kemudian buat Object URL
-      const byteCharacters = atob(data);  // Decoding Base64 to raw binary
-      const byteArray = new Uint8Array(byteCharacters.length);
+      try {
+        const byteCharacters = atob(data);
+        const byteArray = new Uint8Array(byteCharacters.length);
 
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteArray[i] = byteCharacters.charCodeAt(i);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteArray[i] = byteCharacters.charCodeAt(i);
+        }
+
+        const blob = new Blob([byteArray], { type: 'video/mp4' });
+        const objectURL = URL.createObjectURL(blob);
+
+        videoElement.src = objectURL;
+      } catch (error) {
+        console.error("Error decoding or creating Blob", error);
       }
-
-      const blob = new Blob([byteArray], { type: 'video/mp4' });  // Blob for video stream
-      const objectURL = URL.createObjectURL(blob);  // Create URL from Blob
-
-      // Set stream video ke elemen video
-      videoElement.src = objectURL;
     });
   </script>
 </body>
