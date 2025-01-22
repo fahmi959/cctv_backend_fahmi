@@ -1,25 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live CCTV Stream</title>
-    <script src="/socket.io/socket.io.js"></script>
-</head>
-<body>
-    <h1>Live CCTV Stream</h1>
-    <video id="videoElement" width="640" height="480" autoplay></video>
+<script>
+    // URL HLS stream yang dikirim dari server atau aplikasi
+    var videoUrl = "https://cctv-backend-fahmi.vercel.app/live/stream.m3u8";  // Ganti dengan URL stream HLS yang sesuai
 
-    <script>
-        const socket = io();
-        const videoElement = document.getElementById('videoElement');
-
-        // Receive video stream data from the server
-        socket.on('video', (data) => {
-            const blob = new Blob([data], { type: 'video/webm' });
-            const videoURL = URL.createObjectURL(blob);
-            videoElement.src = videoURL;
+    // Menggunakan HLS.js untuk memutar stream HLS
+    if (Hls.isSupported()) {
+        var hls = new Hls();
+        hls.loadSource(videoUrl);
+        hls.attachMedia(document.getElementById('video'));
+        hls.on(Hls.Events.MANIFEST_PARSED, function() {
+            console.log("Manifest Loaded");
         });
-    </script>
-</body>
-</html>
+    }
+    // Untuk browser yang sudah mendukung HLS secara native (seperti Safari)
+    else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = videoUrl;
+    }
+</script>
