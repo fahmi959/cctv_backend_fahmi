@@ -1,96 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CCTV Monitoring</title>
-  <style>
-    video {
-      width: 320px;
-      height: 240px;
-      margin: 10px;
-      border: 2px solid #000;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCTV Monitor</title>
+    <style>
+        video {
+            width: 100%;
+            height: auto;
+            border: 1px solid #ccc;
+        }
+    </style>
 </head>
 <body>
-  <h1>Live CCTV Monitoring</h1>
-  <video id="remoteVideo" autoplay></video>
+    <h1>CCTV Live Stream</h1>
+    <video id="videoElement" controls autoplay></video>
 
-  <script>
-    const signalingServer = new WebSocket('ws://localhost:3000');
-    const localVideo = document.createElement("video");
-    localVideo.id = "localVideo";
-    localVideo.autoplay = true;
-    document.body.appendChild(localVideo);
+    <script>
+        const ws = new WebSocket('ws://localhost:3000'); // Ganti dengan URL server Anda jika sudah deploy
 
-    const peerConnection = new RTCPeerConnection();
-    const constraints = { video: true };
+        // Event WebSocket on connection
+        ws.onopen = () => {
+            console.log('Connected to server');
+        };
 
-    // Get user media (camera)
-    navigator.mediaDevices.getUserMedia(constraints)
-      .then((stream) => {
-        localVideo.srcObject = stream;
+        // Event WebSocket on receiving message
+        ws.onmessage = (event) => {
+            console.log('Received:', event.data);
+            // Tambahkan logika untuk memproses data video stream disini
+        };
 
-        // Add tracks from the camera to the peer connection
-        stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
-
-        // Create an offer to send to the backend
-        peerConnection.createOffer()
-          .then(offer => {
-            return peerConnection.setLocalDescription(offer);
-          })
-          .then(() => {
-            signalingServer.send(JSON.stringify({
-              type: "offer",
-              sdp: peerConnection.localDescription
-            }));
-          });
-      })
-      .catch((error) => {
-        console.error("Error accessing media devices.", error);
-      });
-
-    // Handle incoming signaling messages
-    signalingServer.onmessage = (message) => {
-      const data = JSON.parse(message.data);
-
-      if (data.type === "offer") {
-        // Answer to the offer
-        peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp))
-          .then(() => peerConnection.createAnswer())
-          .then((answer) => peerConnection.setLocalDescription(answer))
-          .then(() => {
-            signalingServer.send(JSON.stringify({
-              type: "answer",
-              sdp: peerConnection.localDescription
-            }));
-          });
-      } else if (data.type === "answer") {
-        // Set the answer as remote description
-        peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
-      } else if (data.type === "candidate") {
-        // Add ICE candidates to the connection
-        const candidate = new RTCIceCandidate(data.candidate);
-        peerConnection.addIceCandidate(candidate);
-      }
-    };
-
-    // Add ICE candidates to the peer connection
-    peerConnection.onicecandidate = (event) => {
-      if (event.candidate) {
-        signalingServer.send(JSON.stringify({
-          type: "candidate",
-          candidate: event.candidate
-        }));
-      }
-    };
-
-    // Display the remote video stream
-    peerConnection.ontrack = (event) => {
-      const remoteVideo = document.getElementById('remoteVideo');
-      remoteVideo.srcObject = event.streams[0];
-    };
-  </script>
+        // Contoh mengirimkan pesan ke server
+        ws.send('Hello from client!');
+    </script>
 </body>
 </html>
