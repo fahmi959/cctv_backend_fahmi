@@ -17,11 +17,10 @@
     var videoUrl = "https://cctv-backend-fahmi.vercel.app/live/stream.m3u8";  // Ganti dengan URL stream HLS yang sesuai
 
     // Menggunakan HLS.js untuk memutar stream HLS
-    var video = document.getElementById('videoElement');  // Ganti dengan ID yang benar
     if (Hls.isSupported()) {
         var hls = new Hls();
         hls.loadSource(videoUrl);
-        hls.attachMedia(video);
+        hls.attachMedia(document.getElementById('video'));
         hls.on(Hls.Events.MANIFEST_PARSED, function() {
             console.log("Manifest Loaded");
         });
@@ -31,6 +30,5 @@
         video.src = videoUrl;
     }
 </script>
-
 </body>
 </html>
