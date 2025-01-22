@@ -1,39 +1,30 @@
 const express = require('express');
-const WebSocket = require('ws');
-const app = express();
 const http = require('http');
+const socketIo = require('socket.io');
+
+const app = express();
 const server = http.createServer(app);
+const io = socketIo(server);
 
-// WebSocket server untuk menerima stream video
-const wss = new WebSocket.Server({ server });
+// Serve static files from the 'public' directory
+app.use(express.static('public'));
 
-wss.on('connection', ws => {
-    console.log('Client connected');
+// Listen for incoming connections
+io.on('connection', (socket) => {
+    console.log('A user connected');
 
-    // Menangani pesan yang diterima dari client (Aplikasi Android)
-    ws.on('message', message => {
-        console.log('Received message:', message);
-        // Kirimkan data yang diterima ke semua client yang terhubung
-        wss.clients.forEach(client => {
-            if (client !== ws && client.readyState === WebSocket.OPEN) {
-                client.send(message);
-            }
-        });
+    socket.on('disconnect', () => {
+        console.log('A user disconnected');
     });
 
-    ws.on('close', () => {
-        console.log('Client disconnected');
-    });
-
-    ws.on('error', (err) => {
-        console.error('WebSocket error:', err);
+    // Listen for video stream from Android
+    socket.on('video', (data) => {
+        // Broadcast the video data to all connected clients
+        socket.broadcast.emit('video', data);
     });
 });
 
-// Menggunakan express untuk melayani file statis
-app.use(express.static('public'));
-
-// Menjalankan server pada port 3000
+// Start server on port 3000
 server.listen(3000, () => {
     console.log('Server is running on http://localhost:3000');
 });
