@@ -15,7 +15,7 @@ io.on("connection", (socket) => {
   // Terima video stream dari Android client
   socket.on("videoStream", (data) => {
     // Kirim stream ke semua client yang terhubung (browser)
-    socket.broadcast.emit("receiveStream", { id: socket.id, data });
+     socket.broadcast.emit("receiveStream", { id: socket.id, data });
   });
 
   socket.on("disconnect", () => {
