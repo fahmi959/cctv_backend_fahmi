@@ -34,13 +34,7 @@
       }
 
       try {
-        const byteCharacters = atob(data);
-        const byteArray = new Uint8Array(byteCharacters.length);
-
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteArray[i] = byteCharacters.charCodeAt(i);
-        }
-
+        const byteArray = new Uint8Array(data); // Direct binary data
         const blob = new Blob([byteArray], { type: 'video/mp4' });
         const objectURL = URL.createObjectURL(blob);
 
