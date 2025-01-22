@@ -17,21 +17,27 @@
     <video id="videoElement" controls autoplay></video>
 
     <script>
-        const ws = new WebSocket('ws://localhost:3000'); // Ganti dengan URL server Anda jika sudah deploy
+        // Membuat koneksi WebSocket ke server
+        const ws = new WebSocket('ws://localhost:3000'); // Ganti dengan URL server Anda jika sudah di-deploy
 
-        // Event WebSocket on connection
         ws.onopen = () => {
-            console.log('Connected to server');
+            console.log('Connected to WebSocket server');
         };
 
-        // Event WebSocket on receiving message
         ws.onmessage = (event) => {
             console.log('Received:', event.data);
-            // Tambahkan logika untuk memproses data video stream disini
+            // Jika pesan adalah stream video (base64 atau blob), tampilkan di video element
+            const videoElement = document.getElementById('videoElement');
+            videoElement.src = URL.createObjectURL(event.data); // Ini hanya contoh jika data adalah Blob
         };
 
-        // Contoh mengirimkan pesan ke server
-        ws.send('Hello from client!');
+        ws.onclose = () => {
+            console.log('WebSocket connection closed');
+        };
+
+        ws.onerror = (error) => {
+            console.error('WebSocket error:', error);
+        };
     </script>
 </body>
 </html>
