@@ -1,23 +1,25 @@
-const NodeMediaServer = require('node-media-server');
+const express = require('express');
+const app = express();
+const path = require('path');
 
-// Konfigurasi server Node.js untuk RTMP
-const config = {
-  logType: 3, // log level: 3 is for error logging
-  rtmp: {
-    port: 1935, // Port untuk RTMP (default 1935)
-    chunk_size: 4096,
-    gop_cache: true,
-    ping: 60,
-    ping_timeout: 30
-  },
-  http: {
-    port: 8000, // Port untuk HTTP (misalnya streaming di browser)
-    allow_origin: '*'
-  }
-};
+// Set port untuk aplikasi
+const PORT = process.env.PORT || 3000;
 
-const nms = new NodeMediaServer(config);
+// Menyajikan file statis (HTML dan lainnya)
+app.use(express.static(path.join(__dirname, 'public')));
 
-nms.run(); // Menjalankan server RTMP
+// Endpoint untuk menerima data stream dari aplikasi Android (RTMP streaming)
+app.post('/stream', (req, res) => {
+    console.log("Stream received");
+    res.status(200).send("Stream received");
+});
 
-console.log('NodeMediaServer started...');
+// Endpoint untuk halaman index
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Menjalankan server pada PORT yang ditentukan
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
