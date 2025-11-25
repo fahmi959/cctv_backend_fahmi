@@ -96,8 +96,10 @@
 
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px; /* ← spacing antar button */
+            gap: 25px; /* ← spacing antar button */
         }
+
+        
 
         .btn-link {
             width: 100%;
@@ -135,9 +137,19 @@
     <div class="container">
 
         <!-- AUDIO PLAYER terlihat -->
-        <audio controls autoplay loop style="width: 100%; margin-bottom: 15px;">
-            <source src="luca_battle.mp3" type="audio/mpeg">
-        </audio>
+  <audio id="bgAudio" autoplay loop muted>
+    <source src="luca_battle.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    window.addEventListener('load', () => {
+        const audio = document.getElementById('bgAudio');
+        setTimeout(() => {
+            audio.muted = false;
+            audio.play().catch(()=>{});
+        }, 300);
+    });
+</script>
 
         <h1>📘 Daftar Link Ujian</h1>
         <div class="date">Hari Rabu, 26 November 2025</div>
