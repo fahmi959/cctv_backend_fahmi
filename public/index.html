@@ -23,27 +23,23 @@
             overflow-x: hidden;
         }
 
-        /* Background anim */
         @keyframes bgMove {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
-        /* HEADER ZOOM */
         @keyframes zoomFade {
             0% { opacity: 0; transform: scale(0.7); }
             100% { opacity: 1; transform: scale(1); }
         }
 
-        /* ZIGZAG SECTION */
         @keyframes zigZag {
             0% { opacity: 0; transform: translateX(-25px) rotate(-1deg); }
             50% { transform: translateX(10px) rotate(1deg); }
             100% { opacity: 1; transform: translateX(0) rotate(0); }
         }
 
-        /* BUTTON POP */
         @keyframes popIn {
             0% { opacity: 0; transform: scale(0.6) translateY(10px); }
             60% { transform: scale(1.1) translateY(0); }
@@ -90,17 +86,20 @@
             animation: zigZag .6s ease forwards;
         }
 
+        /* GRID 2×2 */
         .link-block {
             background: #edf2ff;
             padding: 15px;
             border-radius: 12px;
             margin-bottom: 18px;
-            opacity: 0;
             animation: zigZag .7s ease forwards;
+
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
         }
 
         .btn-link {
-            display: block;
             width: 100%;
             text-align: center;
             background: #004ad7;
@@ -108,38 +107,37 @@
             padding: 11px;
             border-radius: 9px;
             font-size: 15px;
-            margin-bottom: 9px;
             text-decoration: none;
             font-weight: 700;
 
             opacity: 0;
             animation: popIn .45s ease forwards;
+            transition: 0.25s ease;
         }
 
-        /* Animasi bertahap */
+        /* Delay animasi tombol */
         .btn-link:nth-child(1) { animation-delay: .1s; }
         .btn-link:nth-child(2) { animation-delay: .2s; }
         .btn-link:nth-child(3) { animation-delay: .3s; }
         .btn-link:nth-child(4) { animation-delay: .4s; }
 
-        /* Hover efek gaming */
+        /* Hover = MERAH */
         .btn-link:hover {
-            background: #0036a9;
+            background: #e40000;
             transform: scale(1.08);
-            box-shadow: 0 0 12px rgba(0, 85, 255, 0.6);
+            box-shadow: 0 0 14px rgba(255, 40, 40, 0.7);
         }
 
-        /* Click effect */
+        /* Click */
         .btn-link:active {
-            transform: scale(0.95);
-            box-shadow: none;
+            transform: scale(0.93);
         }
-
     </style>
 </head>
 <body>
 
-    <audio autoplay loop>
+    <!-- AUDIO perbaikan autoplay -->
+    <audio autoplay loop playsinline>
         <source src="/luca_battle.mp3" type="audio/mpeg">
     </audio>
 
