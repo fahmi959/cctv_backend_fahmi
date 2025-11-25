@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Live CCTV Links</title>
+    <title>Daftar Link Ujian</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -13,68 +13,147 @@
             margin: 0;
             padding: 0;
             font-family: 'Inter', sans-serif;
-            background: #f2f6ff;
-            color: #222;
+            background: linear-gradient(135deg, #dce4ff, #eaf0ff, #f2f6ff);
+            background-size: 200% 200%;
+            animation: bgMove 8s ease infinite;
+            color: #111;
             display: flex;
             justify-content: center;
-            padding: 40px 10px;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* Background anim */
+        @keyframes bgMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* HEADER ZOOM */
+        @keyframes zoomFade {
+            0% { opacity: 0; transform: scale(0.7); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* ZIGZAG SECTION */
+        @keyframes zigZag {
+            0% { opacity: 0; transform: translateX(-25px) rotate(-1deg); }
+            50% { transform: translateX(10px) rotate(1deg); }
+            100% { opacity: 1; transform: translateX(0) rotate(0); }
+        }
+
+        /* BUTTON POP */
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.6) translateY(10px); }
+            60% { transform: scale(1.1) translateY(0); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
         .container {
-            max-width: 900px;
+            max-width: 700px;
             width: 100%;
-            background: #ffffff;
-            padding: 30px;
+            background: #ffffffd9;
+            backdrop-filter: blur(4px);
+            padding: 25px;
             border-radius: 16px;
-            box-shadow: 0 0 25px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+            animation: zigZag .9s ease forwards;
         }
 
         h1 {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: #0066ff;
+            font-size: 30px;
+            font-weight: 800;
+            margin-bottom: 5px;
+            color: #003adb;
             text-align: center;
+            animation: zoomFade .9s ease forwards;
+        }
+
+        .date {
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 25px;
+            color: #333;
+            opacity: 0;
+            animation: zoomFade .9s ease forwards;
+            animation-delay: .2s;
         }
 
         h2 {
-            margin-top: 30px;
+            margin-top: 20px;
             margin-bottom: 12px;
             font-weight: 700;
-            font-size: 22px;
-            color: #333;
+            font-size: 20px;
+            color: #222;
+            opacity: 0;
+            animation: zigZag .6s ease forwards;
         }
 
         .link-block {
-            background: #eef3ff;
-            padding: 18px;
+            background: #edf2ff;
+            padding: 15px;
             border-radius: 12px;
-            margin-bottom: 25px;
+            margin-bottom: 18px;
+            opacity: 0;
+            animation: zigZag .7s ease forwards;
         }
 
         .btn-link {
             display: block;
             width: 100%;
             text-align: center;
-            background: #0066ff;
+            background: #004ad7;
             color: #fff;
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 16px;
-            margin-bottom: 10px;
+            padding: 11px;
+            border-radius: 9px;
+            font-size: 15px;
+            margin-bottom: 9px;
             text-decoration: none;
-            font-weight: 600;
-            transition: 0.2s;
+            font-weight: 700;
+
+            opacity: 0;
+            animation: popIn .45s ease forwards;
         }
 
+        /* Animasi bertahap */
+        .btn-link:nth-child(1) { animation-delay: .1s; }
+        .btn-link:nth-child(2) { animation-delay: .2s; }
+        .btn-link:nth-child(3) { animation-delay: .3s; }
+        .btn-link:nth-child(4) { animation-delay: .4s; }
+
+        /* Hover efek gaming */
         .btn-link:hover {
-            background: #004ccc;
+            background: #0036a9;
+            transform: scale(1.08);
+            box-shadow: 0 0 12px rgba(0, 85, 255, 0.6);
         }
+
+        /* Click effect */
+        .btn-link:active {
+            transform: scale(0.95);
+            box-shadow: none;
+        }
+
     </style>
 </head>
 <body>
+
+    <audio autoplay loop>
+        <source src="/luca_battle.mp3" type="audio/mpeg">
+    </audio>
+
     <div class="container">
         <h1>📘 Daftar Link Ujian</h1>
+        <div class="date">Hari Rabu, 26 November 2025</div>
+
+        <h2>Ujian Ke 1</h2>
+        <div class="link-block">
+            <a class="btn-link" href="#" target="_blank">Link 1</a>
+            <a class="btn-link" href="#" target="_blank">Link 2</a>
+            <a class="btn-link" href="#" target="_blank">Link 3</a>
+            <a class="btn-link" href="#" target="_blank">Link 4</a>
+        </div>
 
         <h2>Ujian Ke 2</h2>
         <div class="link-block">
@@ -92,5 +171,6 @@
             <a class="btn-link" href="https://s.id/ASAS_B_INGGRIS_XII" target="_blank">Kelas XII A-F</a>
         </div>
     </div>
+
 </body>
 </html>
