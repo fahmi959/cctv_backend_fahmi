@@ -1,54 +1,111 @@
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Live CCTV Stream</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="/socket.io/socket.io.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background: #0f0f0f;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            padding: 40px 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #4da6ff;
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 30px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 22px;
+            color: #ffd24d;
+        }
+
+        a {
+            color: #79b7ff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .link-block {
+            background: #262626;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            line-height: 1.8;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 12px;
+            margin-top: 20px;
+            background: #000;
+        }
+    </style>
 </head>
 <body>
-    <h1>Live CCTV Stream</h1>
+    <div class="container">
+        <h1>📡 Live CCTV Stream</h1>
 
-<h2> ujian ke 2</h2>
-    <h3>
-<p>https://bit.ly/ASAS_PPKN_X_2025 Kls X A-F</p>
-https://forms.gle/Mw5HET2hVSBhoncv7 (XI A-C)
-https://forms.gle/P1CCWkUBhbAQFfdn6 (XI D-F)
-https://forms.gle/dMJgVrdsL2XahDqy5 (XII A-F)
-    </h3>
+        <h2>Ujian Ke 2</h2>
+        <div class="link-block">
+            <a href="https://bit.ly/ASAS_PPKN_X_2025" target="_blank">Kelas X A-F</a><br>
+            <a href="https://forms.gle/Mw5HET2hVSBhoncv7" target="_blank">XI A-C</a><br>
+            <a href="https://forms.gle/P1CCWkUBhbAQFfdn6" target="_blank">XI D-F</a><br>
+            <a href="https://forms.gle/dMJgVrdsL2XahDqy5" target="_blank">XII A-F</a>
+        </div>
 
         <h2>Ujian Ke 3</h2>
-    <h3>
-         https://forms.gle/5aE9zh3Uz2HVHke39 (kLS X A-F)
- https://forms.gle/ngBhmTbRkdFGBewv8 (XI A-C)
+        <div class="link-block">
+            <a href="https://forms.gle/5aE9zh3Uz2HVHke39" target="_blank">Kelas X A-F</a><br>
+            <a href="https://forms.gle/ngBhmTbRkdFGBewv8" target="_blank">XI A-C</a><br>
+            <a href="https://s.id/ASAS_B_INGGRIS_XI_D-F" target="_blank">XI D-F</a><br>
+            <a href="https://s.id/ASAS_B_INGGRIS_XII" target="_blank">Kelas XII A-F</a>
+        </div>
 
- https://s.id/ASAS_B_INGGRIS_XI_D-F (XI D-F)
- https://s.id/ASAS_B_INGGRIS_XII (kLS XII A-F)
-        
-    </h3>
+        <video id="videoElement" autoplay controls></video>
+    </div>
 
-    
-<video id="videoElement" width="640" height="480" autoplay></video>
-<script>
-    // URL HLS stream yang dikirim dari server atau aplikasi
-    var videoUrl = "https://cctv-backend-fahmi.vercel.app/live/stream.m3u8";  // Ganti dengan URL stream HLS yang sesuai
+    <script>
+        var video = document.getElementById("videoElement");
+        var videoUrl = "https://cctv-backend-fahmi.vercel.app/live/stream.m3u8";
 
-    // Menggunakan HLS.js untuk memutar stream HLS
-    if (Hls.isSupported()) {
-        var hls = new Hls();
-        hls.loadSource(videoUrl);
-        hls.attachMedia(document.getElementById('video'));
-        hls.on(Hls.Events.MANIFEST_PARSED, function() {
-            console.log("Manifest Loaded");
-        });
-    }
-    // Untuk browser yang sudah mendukung HLS secara native (seperti Safari)
-    else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        video.src = videoUrl;
-    }
-</script>
+        if (Hls.isSupported()) {
+            var hls = new Hls();
+            hls.loadSource(videoUrl);
+            hls.attachMedia(video);
+        } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+            video.src = videoUrl;
+        }
+    </script>
 </body>
 </html>
