@@ -3,20 +3,18 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Live CCTV Stream</title>
+    <title>Live CCTV Links</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script src="/socket.io/socket.io.js"></script>
 
     <style>
         body {
             margin: 0;
             padding: 0;
             font-family: 'Inter', sans-serif;
-            background: #0f0f0f;
-            color: #fff;
+            background: #f2f6ff;
+            color: #222;
             display: flex;
             justify-content: center;
             padding: 40px 10px;
@@ -25,87 +23,74 @@
         .container {
             max-width: 900px;
             width: 100%;
-            background: #1a1a1a;
+            background: #ffffff;
             padding: 30px;
             border-radius: 16px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.08);
         }
 
         h1 {
             font-size: 32px;
             font-weight: 700;
             margin-bottom: 20px;
-            color: #4da6ff;
+            color: #0066ff;
             text-align: center;
         }
 
         h2 {
             margin-top: 30px;
-            margin-bottom: 10px;
-            font-weight: 600;
+            margin-bottom: 12px;
+            font-weight: 700;
             font-size: 22px;
-            color: #ffd24d;
-        }
-
-        a {
-            color: #79b7ff;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        a:hover {
-            text-decoration: underline;
+            color: #333;
         }
 
         .link-block {
-            background: #262626;
-            padding: 15px;
-            border-radius: 10px;
+            background: #eef3ff;
+            padding: 18px;
+            border-radius: 12px;
             margin-bottom: 25px;
-            line-height: 1.8;
         }
 
-        video {
+        .btn-link {
+            display: block;
             width: 100%;
-            border-radius: 12px;
-            margin-top: 20px;
-            background: #000;
+            text-align: center;
+            background: #0066ff;
+            color: #fff;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .btn-link:hover {
+            background: #004ccc;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>📡 Live CCTV Stream</h1>
+        <h1>📘 Daftar Link Ujian</h1>
 
         <h2>Ujian Ke 2</h2>
         <div class="link-block">
-            <a href="https://bit.ly/ASAS_PPKN_X_2025" target="_blank">Kelas X A-F</a><br>
-            <a href="https://forms.gle/Mw5HET2hVSBhoncv7" target="_blank">XI A-C</a><br>
-            <a href="https://forms.gle/P1CCWkUBhbAQFfdn6" target="_blank">XI D-F</a><br>
-            <a href="https://forms.gle/dMJgVrdsL2XahDqy5" target="_blank">XII A-F</a>
+            <a class="btn-link" href="https://bit.ly/ASAS_PPKN_X_2025" target="_blank">Kelas X A-F</a>
+            <a class="btn-link" href="https://forms.gle/Mw5HET2hVSBhoncv7" target="_blank">XI A-C</a>
+            <a class="btn-link" href="https://forms.gle/P1CCWkUBhbAQFfdn6" target="_blank">XI D-F</a>
+            <a class="btn-link" href="https://forms.gle/dMJgVrdsL2XahDqy5" target="_blank">XII A-F</a>
         </div>
 
         <h2>Ujian Ke 3</h2>
         <div class="link-block">
-            <a href="https://forms.gle/5aE9zh3Uz2HVHke39" target="_blank">Kelas X A-F</a><br>
-            <a href="https://forms.gle/ngBhmTbRkdFGBewv8" target="_blank">XI A-C</a><br>
-            <a href="https://s.id/ASAS_B_INGGRIS_XI_D-F" target="_blank">XI D-F</a><br>
-            <a href="https://s.id/ASAS_B_INGGRIS_XII" target="_blank">Kelas XII A-F</a>
+            <a class="btn-link" href="https://forms.gle/5aE9zh3Uz2HVHke39" target="_blank">Kelas X A-F</a>
+            <a class="btn-link" href="https://forms.gle/ngBhmTbRkdFGBewv8" target="_blank">XI A-C</a>
+            <a class="btn-link" href="https://s.id/ASAS_B_INGGRIS_XI_D-F" target="_blank">XI D-F</a>
+            <a class="btn-link" href="https://s.id/ASAS_B_INGGRIS_XII" target="_blank">Kelas XII A-F</a>
         </div>
-
-        <video id="videoElement" autoplay controls></video>
     </div>
-
-    <script>
-        var video = document.getElementById("videoElement");
-        var videoUrl = "https://cctv-backend-fahmi.vercel.app/live/stream.m3u8";
-
-        if (Hls.isSupported()) {
-            var hls = new Hls();
-            hls.loadSource(videoUrl);
-            hls.attachMedia(video);
-        } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-            video.src = videoUrl;
-        }
-    </script>
 </body>
 </html>
