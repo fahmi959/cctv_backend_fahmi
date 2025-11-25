@@ -137,19 +137,23 @@
     <div class="container">
 
         <!-- AUDIO PLAYER terlihat -->
-  <audio id="bgAudio" autoplay loop muted>
+<!-- AUDIO PLAYER (disembunyikan tapi tetap dianggap tampil oleh browser) -->
+<audio id="bgAudio" autoplay loop controls
+       style="width:1px; height:1px; opacity:0; position:absolute; left:-100px;">
     <source src="luca_battle.mp3" type="audio/mpeg">
 </audio>
 
 <script>
     window.addEventListener('load', () => {
         const audio = document.getElementById('bgAudio');
-        setTimeout(() => {
-            audio.muted = false;
-            audio.play().catch(()=>{});
-        }, 300);
+
+        // Paksa play setelah page load
+        audio.play().catch(err => {
+            console.log("Autoplay ditolak browser:", err);
+        });
     });
 </script>
+
 
         <h1>📘 Daftar Link Ujian</h1>
         <div class="date">Hari Rabu, 26 November 2025</div>
@@ -162,7 +166,7 @@
             <a class="btn-link" href="#">Link 4</a>
         </div>
 
-        <h2>Ujian Ke 2</h2>
+        <!-- <h2>Ujian Ke 2</h2>
         <div class="link-block">
             <a class="btn-link" href="https://bit.ly/ASAS_PPKN_X_2025">Kelas X A-F</a>
             <a class="btn-link" href="https://forms.gle/Mw5HET2hVSBhoncv7">XI A-C</a>
@@ -176,7 +180,7 @@
             <a class="btn-link" href="https://forms.gle/ngBhmTbRkdFGBewv8">XI A-C</a>
             <a class="btn-link" href="https://s.id/ASAS_B_INGGRIS_XI_D-F">XI D-F</a>
             <a class="btn-link" href="https://s.id/ASAS_B_INGGRIS_XII">Kelas XII A-F</a>
-        </div>
+        </div> -->
 
     </div>
 
