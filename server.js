@@ -21,6 +21,12 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Endpoint untuk halaman kunci
+app.get('/kunci', (req, res) => { 
+    res.sendFile(path.join(__dirname, 'public', 'kunci.html')); 
+});
+
+
 // Menjalankan server pada PORT yang ditentukan
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
