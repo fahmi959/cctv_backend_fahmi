@@ -138,21 +138,29 @@
 
         <!-- AUDIO PLAYER terlihat -->
 <!-- AUDIO PLAYER (disembunyikan tapi tetap dianggap tampil oleh browser) -->
-<audio id="bgAudio" autoplay loop controls
+        <audio id="bgAudio" loop controls
        style="width:1px; height:1px; opacity:0; position:absolute; left:-100px;">
     <source src="luca_battle.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-    window.addEventListener('load', () => {
-        const audio = document.getElementById('bgAudio');
+    const audio = document.getElementById("bgAudio");
 
-        // Paksa play setelah page load
-        audio.play().catch(err => {
-            console.log("Autoplay ditolak browser:", err);
+    // Coba autoplay
+    window.addEventListener("load", () => {
+        audio.play().catch(() => {
+            console.log("Autoplay ditolak, menunggu interaksi user...");
         });
     });
+
+    // Jika user klik di mana saja → langsung play
+    document.addEventListener("click", () => {
+        if (audio.paused) {
+            audio.play().catch(()=>{});
+        }
+    }, { once: true });
 </script>
+
 
 
         <h1>📘 Daftar Link Ujian</h1>
@@ -160,10 +168,10 @@
 
         <h2>Ujian Ke 1</h2>
         <div class="link-block">
-            <a class="btn-link" href="#">Link 1</a>
-            <a class="btn-link" href="#">Link 2</a>
-            <a class="btn-link" href="#">Link 3</a>
-            <a class="btn-link" href="#">Link 4</a>
+            <a class="btn-link" href="https://forms.gle/j7jg8DBGi21WCCoy5">Kelas 10 (KLs X A-F)</a>
+            <a class="btn-link" href="https://s.id/ASAS_MATEMATIKA_XI">Kelas 11 (XI A-F)</a>
+            <a class="btn-link" href="https://bit.ly/MATEMATIKATINGKATLANJUT2025">Kelas 12 (XII A-B)</a>
+            <a class="btn-link" href="https://bit.ly/MATEMATIKAWAJIB2025">Kelas 12 (XII C-F)</a>
         </div>
 
         <!-- <h2>Ujian Ke 2</h2>
