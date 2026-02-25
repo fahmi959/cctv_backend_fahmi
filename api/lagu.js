@@ -1,51 +1,63 @@
-const express = require('express');
-const cors = require('cors');
 const ytdl = require('@distube/ytdl-core');
 
-const app = express();
+module.exports = async (req, res) => {
+    // 1. SETUP CORS AGAR FRONTEND BISA AKSES
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
 
-// Mengizinkan frontend (Base44/React) mengakses backend ini
-app.use(cors());
+    // Handle Preflight Request Browser
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
 
-// INI KUNCINYA: Rute disesuaikan persis dengan panggilan dari Frontend
-app.get('/api/lagu', async (req, res) => {
-    
-    // Menangkap ?id= dari URL
-    const { id } = req.query;
+    // Hanya izinkan metode GET
+    if (req.method !== 'GET') {
+        return res.status(405).json({ error: 'Gunakan metode GET' });
+    }
 
+    // 2. TANGKAP PARAMETER ID (?id=...)
+    const id = req.query.id;
+
+    // === MODIFIKASI: JIKA DIAKSES POLOSAN (TANPA ID) ===
     if (!id) {
-        return res.status(400).json({ error: 'ID YouTube wajib disertakan' });
+        return res.status(200).json({ 
+            status: "Ready", 
+            message: "Server Lagu Ready 🚀! Tambahkan parameter ?id=ID_YOUTUBE untuk mendownload lagu." 
+        });
     }
 
     const url = `https://www.youtube.com/watch?v=${id}`;
 
+    // Validasi apakah ID YouTube benar
     if (!ytdl.validateURL(url)) {
         return res.status(400).json({ error: 'ID YouTube tidak valid' });
     }
 
     try {
-        // Ambil info untuk nama file
+        // 3. AMBIL INFO VIDEO & BERSIHKAN NAMA FILE
         const info = await ytdl.getInfo(url);
         let title = info.videoDetails.title.replace(/[^\w\s-]/gi, '').trim();
-        if (!title) title = "Audio_Track";
+        if (!title) title = "Lagu_FahmiMp3";
 
-        // Set header agar browser otomatis melakukan DOWNLOAD
+        // 4. PAKSA BROWSER UNTUK DOWNLOAD (BUKAN PLAY DI BROWSER)
         res.setHeader('Content-Disposition', `attachment; filename="FahmiMp3 - ${title}.mp3"`);
         res.setHeader('Content-Type', 'audio/mpeg');
 
-        // Mulai streaming audio
+        // 5. STREAMING AUDIO
         const audioStream = ytdl(url, {
             filter: 'audioonly',
             quality: 'highestaudio'
         });
 
-        // Alirkan langsung ke browser (Frontend)
+        // Alirkan langsung ke frontend
         audioStream.pipe(res);
 
         audioStream.on('error', (err) => {
-            console.error('Error saat streaming:', err);
+            console.error('Error Streaming:', err);
             if (!res.headersSent) {
-                res.status(500).json({ error: 'Terjadi kesalahan saat download.' });
+                res.status(500).json({ error: 'Gagal mengunduh audio' });
             } else {
                 res.end();
             }
@@ -53,9 +65,6 @@ app.get('/api/lagu', async (req, res) => {
 
     } catch (error) {
         console.error('Server Error:', error.message);
-        return res.status(500).json({ error: 'Gagal memproses video', details: error.message });
+        return res.status(500).json({ error: 'Gagal memproses video dari YouTube', details: error.message });
     }
-});
-
-// WAJIB ADA UNTUK VERCEL: Export app Express-nya
-module.exports = app;
+};
